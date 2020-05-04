@@ -32,7 +32,7 @@ class TimeInterval(object):
   def __init__(self, value, value_on_reset=None):
     self.value = value
     self.value_on_reset = value_on_reset
-    self.start = time.time()
+    self.start = time.perf_counter()
 
   def check(self):
     """
@@ -41,7 +41,7 @@ class TimeInterval(object):
 
     if self.value is None:
       return True
-    return (time.time() - self.start) >= self.value
+    return (time.perf_counter() - self.start) >= self.value
 
   def reset(self, value=None):
     """
@@ -49,7 +49,7 @@ class TimeInterval(object):
     """
 
     if value is None:
-      value = time.time()
+      value = time.perf_counter()
     self.start = value
     if self.value_on_reset:
       self.value = self.value_on_reset
@@ -74,7 +74,7 @@ class TimeoutManager(TimeInterval):
 
     if self.value is None:
       return False
-    return (time.time() - self.start) >= self.value
+    return (time.perf_counter() - self.start) >= self.value
 
   def remainder(self, max_value=None):
     """
@@ -84,7 +84,7 @@ class TimeoutManager(TimeInterval):
 
     if self.value is None:
       return max_value
-    remainder = self.value - (time.time() - self.start)
+    remainder = self.value - (time.perf_counter() - self.start)
     if remainder < 0.0:
       return 0.0
     elif max_value is not None and remainder > max_value:
